@@ -10,7 +10,10 @@ warnings.filterwarnings('ignore')
 st.set_page_config(page_title="SmartSpend Mumbai", page_icon="💰", layout="wide")
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = "data/SmartSpend_Mumbai_Datasets.xlsx"
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "SmartSpend_Mumbai_Datasets.xlsx")
 MODEL_PATH = "models"
 
 st.markdown("""
