@@ -102,7 +102,7 @@ def smart_signal(current, mean_p, min_p, max_p, model=None, scaler=None, feature
         mean_factor = 1 - (pct_vs_mean / 100 + 1) / 2  # normalized
         prob = float(np.clip((1 - percentile_score) * 0.6 + max(0, -pct_vs_mean / 50) * 0.4, 0.05, 0.97))
 
-    # Decision thresholds — more nuanced than a flat 0.6
+    # Decision thresholds - more nuanced than a flat 0.6
     if prob >= 0.62:
         rec = 'BUY NOW'
     elif prob >= 0.42:
@@ -158,19 +158,20 @@ def build_insight(name, unit, current, mean_p, min_p, max_p, prob, rec, percenti
     elif pct_vs_mean > 10:
         saving_hint = f"Waiting for prices to fall toward the ₹{mean_p:.0f}{unit} average could save you <b>₹{diff_abs:.0f}{unit}</b> per unit."
     else:
-        saving_hint = f"Price is within <b>₹{diff_abs:.0f}{unit}</b> of the long-run average — a reasonable time to buy if you need it now."
+        saving_hint = f"Price is within <b>₹{diff_abs:.0f}{unit}</b> of the long-run average - a reasonable time to buy if you need it now."
 
     lines = [
-        f"<b>Current price:</b> ₹{current:,.0f}{unit} — currently <b style='color:{color}'>{pl}</b>.",
+        f"<b>Current price:</b> ₹{current:,.0f}{unit} - currently <b style='color:{color}'>{pl}</b>.",
         f"<b>vs. Historical average:</b> <b>{format_pct(pct_vs_mean)}</b> ({direction} the ₹{mean_p:,.0f}{unit} long-run mean).",
         f"<b>Price range context:</b> All-time low ₹{min_p:,.0f}{unit} → All-time high ₹{max_p:,.0f}{unit}.",
         saving_hint,
     ]
     if extra_lines:
         lines += extra_lines
-    lines.append(f"<b>Model confidence:</b> {prob:.0%} — <b style='color:{color}'>{rec}</b>.")
+    lines.append(f"<b>Model confidence:</b> {prob:.0%} - <b style='color:{color}'>{rec}</b>.")
 
     html = "<br>".join(lines)
+    html = html.replace("-", "-").replace("–", "-")
     return f'<div class="insight-box">{html}</div>'
 
 if 'page' not in st.session_state:
@@ -179,7 +180,7 @@ if 'page' not in st.session_state:
 # ── HOME PAGE ──
 if st.session_state.page == 'home':
     st.markdown('<div class="big-title">SmartSpend Mumbai</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Know exactly when to buy and when to wait — statistically proven.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Know exactly when to buy and when to wait - statistically proven.</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-hdr">Choose a Category</div>', unsafe_allow_html=True)
 
@@ -229,7 +230,7 @@ if st.session_state.page == 'home':
 # ── ASK ANYTHING ──
     st.markdown('<br><br>', unsafe_allow_html=True)
     st.markdown('<div class="section-hdr">🤖 Ask Anything About Mumbai Prices</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color:#c8c8d8;font-size:0.9rem;margin-bottom:1rem;">Ask in plain English — e.g. "which vegetable is cheapest right now", "compare petrol prices month by month", "which quick commerce platform is cheapest for milk"</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color:#c8c8d8;font-size:0.9rem;margin-bottom:1rem;">Ask in plain English - e.g. "which vegetable is cheapest right now", "compare petrol prices month by month", "which quick commerce platform is cheapest for milk"</div>', unsafe_allow_html=True)
 
     user_question = st.text_input('', placeholder='Type your question here...', key='ask_anything')
 
@@ -263,14 +264,14 @@ if st.session_state.page == 'home':
                 schema_prompt = f"""You have access to these pandas dataframes already loaded in memory.
 IMPORTANT: All date/week columns are already converted to strings like '2024-01' or '2024-01-15'. Do NOT use pd.to_datetime(). Do NOT compare dates. Just use string operations or ignore date columns entirely.
 
-1. df_veg — columns: Date(str), Tomato_per_kg, Onion_per_kg, Potato_per_kg, Mango_per_kg, Orange_per_kg
-2. df_staples — columns: Date(str), Tur_Dal_per_kg, Moong_Dal_per_kg, Urad_Dal_per_kg, Atta_per_kg, Rice_per_kg, Sugar_per_kg, Mustard_Oil_per_litre
-3. df_qcomm — columns: Week(str), Platform(Blinkit/Zepto/Instamart), Amul_Milk_1L, Tata_Salt_1kg, Aashirvaad_Atta_5kg, Fortune_Mustard_Oil_1L, Parle_G_800g, Maggi_Noodles_12pack, Dettol_Soap_4pack, Colgate_200g
-4. df_flights — columns: Search_Date(str), Route, Price_INR, Day_of_Week, Days_to_Departure, Is_Peak_Season, Is_Monsoon
-5. df_hotels — columns: Week(str), Destination, Category(budget/mid/luxury), Price_per_Night_INR, Is_Peak_Season, Is_Off_Season, Weekend_Checkin
-6. df_petrol — columns: Date(str), Petrol_per_litre_INR, CNG_per_kg_INR
-7. df_medicine — columns: Date(str), Crocin_650mg_15tabs, Vicks_Vaporub_50g, Cetirizine_10mg_10tabs, ORS_Electral_21sachets, VitaminD3_60kIU_4tabs, Antifungal_cream_30g, Allegra_120mg_10tabs
-8. df_realestate — columns: Micro_Market, Price_per_sqft_INR, RBI_Repo_Rate_pct, Unsold_Inventory_Index, Demand_Multiplier
+1. df_veg - columns: Date(str), Tomato_per_kg, Onion_per_kg, Potato_per_kg, Mango_per_kg, Orange_per_kg
+2. df_staples - columns: Date(str), Tur_Dal_per_kg, Moong_Dal_per_kg, Urad_Dal_per_kg, Atta_per_kg, Rice_per_kg, Sugar_per_kg, Mustard_Oil_per_litre
+3. df_qcomm - columns: Week(str), Platform(Blinkit/Zepto/Instamart), Amul_Milk_1L, Tata_Salt_1kg, Aashirvaad_Atta_5kg, Fortune_Mustard_Oil_1L, Parle_G_800g, Maggi_Noodles_12pack, Dettol_Soap_4pack, Colgate_200g
+4. df_flights - columns: Search_Date(str), Route, Price_INR, Day_of_Week, Days_to_Departure, Is_Peak_Season, Is_Monsoon
+5. df_hotels - columns: Week(str), Destination, Category(budget/mid/luxury), Price_per_Night_INR, Is_Peak_Season, Is_Off_Season, Weekend_Checkin
+6. df_petrol - columns: Date(str), Petrol_per_litre_INR, CNG_per_kg_INR
+7. df_medicine - columns: Date(str), Crocin_650mg_15tabs, Vicks_Vaporub_50g, Cetirizine_10mg_10tabs, ORS_Electral_21sachets, VitaminD3_60kIU_4tabs, Antifungal_cream_30g, Allegra_120mg_10tabs
+8. df_realestate - columns: Micro_Market, Price_per_sqft_INR, RBI_Repo_Rate_pct, Unsold_Inventory_Index, Demand_Multiplier
 
 User question: {user_question}
 
@@ -280,7 +281,7 @@ Write ONLY pandas code to answer this. Rules:
 - Only use: .mean() .min() .max() .sort_values() .head() .tail() .groupby() .iloc[] .loc[] .idxmin() .idxmax() .value_counts()
 - Do NOT use pd.to_datetime(), do NOT compare dates, do NOT use rolling(), do NOT import anything, do NOT use plt or st
 - For "cheapest right now" use .iloc[-1] to get latest row or .mean() across all rows
-- Keep it simple — one or two lines max
+- Keep it simple - one or two lines max
 - Write ONLY the code, no explanation, no backticks"""
 
                 code_response = groq_client.chat.completions.create(
@@ -301,7 +302,7 @@ Write ONLY pandas code to answer this. Rules:
                     result = safe_vars.get('result', None)
                 except Exception as e1:
                     exec_error = str(e1)
-                    # fallback — ask for even simpler code
+                    # fallback - ask for even simpler code
                     fallback_prompt = f"""Write ONE line of pandas code only. No dates. No rolling. Store in `result`.
 Available dataframes: df_veg(Tomato_per_kg,Onion_per_kg,Potato_per_kg), df_staples(Tur_Dal_per_kg,Atta_per_kg,Rice_per_kg), df_petrol(Petrol_per_litre_INR,CNG_per_kg_INR), df_qcomm(Platform,Amul_Milk_1L), df_flights(Route,Price_INR), df_hotels(Destination,Price_per_Night_INR), df_medicine(Crocin_650mg_15tabs), df_realestate(Micro_Market,Price_per_sqft_INR)
 Question: {user_question}
@@ -340,11 +341,11 @@ Write a clear helpful answer in 3-4 sentences. Start with the answer directly. I
                     max_tokens=250,
                     temperature=0.7,
                 )
-                conclusion = conclusion_response.choices[0].message.content.strip().replace("—", "-").replace("–", "-")
+                conclusion = conclusion_response.choices[0].message.content.strip().replace("-", "-").replace("–", "-")
 
                 st.markdown(f'''
                 <div style="background:#0d1f2d;border:1px solid #1a3a5c;border-radius:16px;padding:1.6rem;margin-top:1rem;">
-                    <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:#5b9bd5;margin-bottom:0.8rem;">🤖 SmartSpend AI — Powered by LLaMA 3</div>
+                    <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:#5b9bd5;margin-bottom:0.8rem;">🤖 SmartSpend AI - Powered by LLaMA 3</div>
                     <div style="color:#e8f4ff;font-size:1rem;line-height:1.8;">{conclusion}</div>
                 </div>
                 ''', unsafe_allow_html=True)
@@ -365,7 +366,7 @@ elif st.session_state.page == 'vegetables':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Vegetables & Fruits</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Mumbai APMC Vashi market prices — should you buy today or wait?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Mumbai APMC Vashi market prices - should you buy today or wait?</div>', unsafe_allow_html=True)
 
     veg_map = {
         'Tomato': ('Tomato_per_kg', 'veg_Tomato_per_kg', '#e74c3c'),
@@ -402,7 +403,7 @@ elif st.session_state.page == 'vegetables':
     ax.fill_between(series.index, series.values, alpha=0.08, color=color)
     ax.axhline(mean_p, color='#ffffff', linewidth=1, linestyle='--', alpha=0.4, label=f'Mean ₹{mean_p:.0f}')
     ax.plot(series.rolling(3).mean().index, series.rolling(3).mean().values, color='#9b9bcc', linewidth=1.2, linestyle=':', alpha=0.7, label='3-period avg')
-    ax.set_title(f'{selected} Price Trend — Mumbai APMC', color='#ffffff', fontsize=11)
+    ax.set_title(f'{selected} Price Trend - Mumbai APMC', color='#ffffff', fontsize=11)
     ax.set_ylabel('Price (INR/kg)', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -425,20 +426,20 @@ elif st.session_state.page == 'vegetables':
     zscore = (current - mean_p) / std_p if std_p > 0 else 0
     monsoon_now = veg['Month'].iloc[-1] in [6,7,8,9]
     extra = []
-    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} standard deviations — {'unusually high, demand caution' if zscore > 1.5 else 'unusually low, strong buy signal' if zscore < -1.5 else 'within normal range'}.")
+    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} standard deviations - {'unusually high, demand caution' if zscore > 1.5 else 'unusually low, strong buy signal' if zscore < -1.5 else 'within normal range'}.")
     if monsoon_now:
         extra.append("<b>Seasonal note:</b> Monsoon season (Jun–Sep) historically drives vegetable prices up 15–30% due to supply disruptions. Stock up before the peak if price is currently low.")
     else:
         extra.append("<b>Seasonal note:</b> Non-monsoon season typically means stable to lower prices at Mumbai APMC. Ideal window for bulk buying.")
     if pct_vs_mean < -10:
-        extra.append(f"<b>Opportunity alert:</b> {selected} is currently more than 10% below its historical average. This is statistically a strong buying window — prices at this level have historically reverted upward within 2–4 weeks.")
+        extra.append(f"<b>Opportunity alert:</b> {selected} is currently more than 10% below its historical average. This is statistically a strong buying window - prices at this level have historically reverted upward within 2–4 weeks.")
     elif pct_vs_mean > 15:
         extra.append(f"<b>Caution:</b> {selected} is elevated above its normal range. Historically, prices this high have corrected downward within 2–3 weeks. Consider buying smaller quantities for now.")
 
     c1, c2 = st.columns([1,2])
     with c1:
         st.markdown(f'''<div class="signal-card">
-            <div class="m-label">{selected} — APMC Vashi</div>
+            <div class="m-label">{selected} - APMC Vashi</div>
             <div class="m-value">₹{current:.0f}/kg</div>
             <br>
             <div class="m-label">Historical Percentile</div>
@@ -457,7 +458,7 @@ elif st.session_state.page == 'petrol':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Petrol & CNG</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Mumbai daily fuel prices — PPAC data. Fill up now or wait for a revision?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Mumbai daily fuel prices - PPAC data. Fill up now or wait for a revision?</div>', unsafe_allow_html=True)
 
     fuel = st.radio('Select fuel', ['Petrol', 'CNG'], horizontal=True)
     col_name = 'Petrol_per_litre_INR' if fuel == 'Petrol' else 'CNG_per_kg_INR'
@@ -484,7 +485,7 @@ elif st.session_state.page == 'petrol':
     ax.plot(series.index, series.values, color=color, linewidth=2)
     ax.fill_between(series.index, series.values, alpha=0.08, color=color)
     ax.axhline(mean_p, color='#ffffff', linewidth=1, linestyle='--', alpha=0.4, label=f'Mean ₹{mean_p:.2f}')
-    ax.set_title(f'Mumbai {fuel} Price — Weekly Average', color='#ffffff', fontsize=11)
+    ax.set_title(f'Mumbai {fuel} Price - Weekly Average', color='#ffffff', fontsize=11)
     ax.set_ylabel(f'Price (INR{unit})', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -508,17 +509,17 @@ elif st.session_state.page == 'petrol':
 
     zscore = (current - mean_p) / std_p if std_p > 0 else 0
     extra = []
-    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} — {'significantly above long-run average, government revision may push prices lower' if zscore > 1 else 'near or below long-run average — relatively favorable pricing' if zscore < 0 else 'within 1 standard deviation of average'}.")
+    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} - {'significantly above long-run average, government revision may push prices lower' if zscore > 1 else 'near or below long-run average - relatively favorable pricing' if zscore < 0 else 'within 1 standard deviation of average'}.")
     extra.append(f"<b>Government revision pattern:</b> India's central government typically reviews fuel prices every 6–8 weeks. CNG prices in Mumbai also depend on MFGL's quarterly tariff revisions. If prices are above average and crude oil has softened globally, a downward revision is plausible.")
     if fuel == 'Petrol':
-        extra.append("<b>Practical tip:</b> Fill a full tank rather than partial fills during favorable windows. For a 40L tank, even a ₹2–3/L saving equals ₹80–120 per fill — meaningful over a year.")
+        extra.append("<b>Practical tip:</b> Fill a full tank rather than partial fills during favorable windows. For a 40L tank, even a ₹2–3/L saving equals ₹80–120 per fill - meaningful over a year.")
     else:
         extra.append("<b>CNG insight:</b> CNG prices in Mumbai have historically been more stable than petrol. High CNG prices relative to history often correct within 4–8 weeks following city gas distribution reviews.")
 
     c1, c2 = st.columns([1,2])
     with c1:
         st.markdown(f'''<div class="signal-card">
-            <div class="m-label">{fuel} — Mumbai</div>
+            <div class="m-label">{fuel} - Mumbai</div>
             <div class="m-value">₹{current:.2f}{unit}</div>
             <br>
             <div class="m-label">Historical Percentile</div>
@@ -537,7 +538,7 @@ elif st.session_state.page == 'flights':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Flights</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Mumbai departure routes — book now or wait for a lower fare?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Mumbai departure routes - book now or wait for a lower fare?</div>', unsafe_allow_html=True)
 
     routes = sorted(df_flights['Route'].unique().tolist())
     selected_route = st.selectbox('Select route', routes)
@@ -562,7 +563,7 @@ elif st.session_state.page == 'flights':
     ax.plot(route_weekly.rolling(7).mean().index, route_weekly.rolling(7).mean().values, color='#ffffff', linewidth=2, label='7-day avg')
     ax.axhline(mean_p, color='#e74c3c', linewidth=1, linestyle='--', alpha=0.5, label=f'All-time mean ₹{mean_p:,.0f}')
     ax.fill_between(route_weekly.index, route_weekly.values, alpha=0.06, color='#6c63ff')
-    ax.set_title(f'{selected_route} — Price Trend', color='#ffffff', fontsize=11)
+    ax.set_title(f'{selected_route} - Price Trend', color='#ffffff', fontsize=11)
     ax.set_ylabel('Price (INR)', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -586,7 +587,7 @@ elif st.session_state.page == 'flights':
     plt.tight_layout()
     st.pyplot(fig2, use_container_width=True)
     plt.close()
-    st.markdown(f'<div style="color:#d0d0e0;font-size:0.9rem;margin:0.5rem 0 1rem;">💡 Cheapest day to book: <strong style="color:#2ecc71">{cheapest_day}</strong> — Most expensive: <strong style="color:#e74c3c">{most_expensive_day}</strong> — Day-of-week saving: <strong style="color:#ffffff">₹{saving_by_day:,.0f}</strong></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#d0d0e0;font-size:0.9rem;margin:0.5rem 0 1rem;">💡 Cheapest day to book: <strong style="color:#2ecc71">{cheapest_day}</strong> - Most expensive: <strong style="color:#e74c3c">{most_expensive_day}</strong> - Day-of-week saving: <strong style="color:#ffffff">₹{saving_by_day:,.0f}</strong></div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-hdr">Buy Signal & Analysis</div>', unsafe_allow_html=True)
 
@@ -614,10 +615,10 @@ elif st.session_state.page == 'flights':
     zscore = (current - mean_p) / std_p if std_p > 0 else 0
     extra = []
     extra.append(f"<b>Booking window insight:</b> Airlines typically price lowest 3–6 weeks before departure. Booking on a <b style='color:#2ecc71'>{cheapest_day}</b> can save up to <b>₹{saving_by_day:,.0f}</b> vs the most expensive day ({most_expensive_day}).")
-    extra.append(f"<b>Z-score:</b> {zscore:+.2f} — current fares are {'significantly elevated, a pullback is likely if you can wait 1–2 weeks' if zscore > 1.2 else 'near or below average — good time to lock in a ticket' if zscore < -0.3 else 'within normal range'}.")
+    extra.append(f"<b>Z-score:</b> {zscore:+.2f} - current fares are {'significantly elevated, a pullback is likely if you can wait 1–2 weeks' if zscore > 1.2 else 'near or below average - good time to lock in a ticket' if zscore < -0.3 else 'within normal range'}.")
     if 'Goa' in selected_route or 'goa' in selected_route.lower():
         extra.append("<b>Route note:</b> Mumbai–Goa is a high-demand leisure route. Prices spike during long weekends, December–January, and Holi. If travelling in those windows, book at least 21 days in advance.")
-    extra.append(f"<b>Price protection tip:</b> If current fares are near the all-time low of ₹{min_p:,.0f}, book immediately — prices at this level rarely persist beyond 48–72 hours on competitive routes.")
+    extra.append(f"<b>Price protection tip:</b> If current fares are near the all-time low of ₹{min_p:,.0f}, book immediately - prices at this level rarely persist beyond 48–72 hours on competitive routes.")
 
     c1, c2 = st.columns([1,2])
     with c1:
@@ -644,7 +645,7 @@ elif st.session_state.page == 'qcomm':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Quick Commerce</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Blinkit · Zepto · Instamart — which platform is cheapest today and should you order now?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Blinkit · Zepto · Instamart - which platform is cheapest today and should you order now?</div>', unsafe_allow_html=True)
 
     qc_products = {
         'Amul Milk 1L': 'Amul_Milk_1L',
@@ -686,7 +687,7 @@ elif st.session_state.page == 'qcomm':
                     <div class="m-value" style="color:{plat_colors[plat]}">₹{price:.2f}</div>
                     {"<div style='color:#2ecc71;font-size:0.85rem;margin-top:0.5rem;font-weight:700;'>✦ CHEAPEST TODAY</div>" if is_cheap else ""}
                 </div>''', unsafe_allow_html=True)
-        st.markdown(f'<div style="color:#d0d0e0;font-size:0.9rem;margin:1rem 0;">💡 Order from <strong style="color:#ffffff">{cheapest}</strong> — save <strong style="color:#2ecc71">₹{saving:.2f}</strong> vs most expensive platform</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="color:#d0d0e0;font-size:0.9rem;margin:1rem 0;">💡 Order from <strong style="color:#ffffff">{cheapest}</strong> - save <strong style="color:#2ecc71">₹{saving:.2f}</strong> vs most expensive platform</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-hdr">Price Trend Across Platforms</div>', unsafe_allow_html=True)
     fig, ax = dark_chart()
@@ -700,7 +701,7 @@ elif st.session_state.page == 'qcomm':
     overall_min = float(np.min(all_prices)) if all_prices else 0
     overall_max = float(np.max(all_prices)) if all_prices else 0
     ax.axhline(overall_mean, color='#ffffff', linewidth=1, linestyle='--', alpha=0.3, label=f'Overall mean ₹{overall_mean:.2f}')
-    ax.set_title(f'{selected} — Weekly Price by Platform', color='#ffffff', fontsize=11)
+    ax.set_title(f'{selected} - Weekly Price by Platform', color='#ffffff', fontsize=11)
     ax.set_ylabel('Price (INR)', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -729,7 +730,7 @@ elif st.session_state.page == 'qcomm':
     if saving > 0 and cheapest:
         extra.append(f"<b>Platform arbitrage:</b> {cheapest} is currently <b>₹{saving:.2f} cheaper</b> than the most expensive platform for this product. Always verify delivery time and minimum order before switching.")
     extra.append(f"<b>Quick commerce pricing pattern:</b> Blinkit, Zepto and Instamart frequently run platform-exclusive sales on weekends (Sat–Sun) and mid-month. If the product is not urgent, checking back on a Friday night often reveals flash discounts of 5–15%.")
-    extra.append(f"<b>Bulk buying signal:</b> {'At current pricing near the lower end of the historical range, stocking up for 2–4 weeks is a smart move — prices are unlikely to fall significantly further.' if percentile_score < 0.4 else 'Current price is above the lower range. Buy what you need now but avoid bulk stockpiling — better prices are likely in the next 1–2 weeks.'}")
+    extra.append(f"<b>Bulk buying signal:</b> {'At current pricing near the lower end of the historical range, stocking up for 2–4 weeks is a smart move - prices are unlikely to fall significantly further.' if percentile_score < 0.4 else 'Current price is above the lower range. Buy what you need now but avoid bulk stockpiling - better prices are likely in the next 1–2 weeks.'}")
 
     c1, c2 = st.columns([1,2])
     with c1:
@@ -753,7 +754,7 @@ elif st.session_state.page == 'staples':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Kitchen Staples</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Monthly wholesale prices Mumbai — stock your pantry at the right time.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Monthly wholesale prices Mumbai - stock your pantry at the right time.</div>', unsafe_allow_html=True)
 
     staple_map = {
         'Tur Dal': ('Tur_Dal_per_kg', 'staple_Tur_Dal_per_kg', '#e74c3c'),
@@ -810,12 +811,12 @@ elif st.session_state.page == 'staples':
 
     zscore = (current - mean_p) / std_p if std_p > 0 else 0
     extra = []
-    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} — {'above normal range, government price control or import duty change could bring prices down — consider buying only near-term requirements' if zscore > 1.2 else 'at or below average — excellent window to stock up for 1–2 months' if zscore < -0.5 else 'within normal trading range'}.")
+    extra.append(f"<b>Z-score vs mean:</b> {zscore:+.2f} - {'above normal range, government price control or import duty change could bring prices down - consider buying only near-term requirements' if zscore > 1.2 else 'at or below average - excellent window to stock up for 1–2 months' if zscore < -0.5 else 'within normal trading range'}.")
 
     staple_notes = {
         'Tur Dal': "Tur Dal prices are heavily influenced by kharif harvest (Oct–Nov) and government MSP decisions. Post-harvest months (Nov–Jan) are historically the cheapest window to buy.",
         'Moong Dal': "Moong Dal has two harvest seasons (summer & kharif). Prices typically ease in March–April and again in October. Monsoon period sees elevated prices.",
-        'Urad Dal': "Urad Dal is a kharif crop — prices tend to peak pre-harvest (Aug–Sep) and ease in Nov–Dec. Stock up during October–November.",
+        'Urad Dal': "Urad Dal is a kharif crop - prices tend to peak pre-harvest (Aug–Sep) and ease in Nov–Dec. Stock up during October–November.",
         'Atta': "Wheat atta prices track rabi wheat harvest (Apr–Jun). Post-harvest months of June–August are historically cheapest. Pre-monsoon stocking is a well-established household strategy.",
         'Rice': "Rice prices ease after kharif harvest (Oct–Dec). Monsoon months can see supply disruptions. October–November is the ideal bulk buying window for rice.",
         'Sugar': "Sugar prices in India are largely government-regulated (FRP/SAP). Price spikes are usually short-lived. Buying during June–September when off-season supply tightens isn't ideal.",
@@ -850,7 +851,7 @@ elif st.session_state.page == 'hotels':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Hotels</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Goa · Lonavala · Mahabaleshwar · Alibaug — book now or wait for better rates?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Goa · Lonavala · Mahabaleshwar · Alibaug - book now or wait for better rates?</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1: selected_dest = st.selectbox('Destination', sorted(df_hotels['Destination'].unique()))
@@ -883,7 +884,7 @@ elif st.session_state.page == 'hotels':
         ax.axhline(mean_p, color='#ffffff', linewidth=1, linestyle='--', alpha=0.4, label=f'Mean ₹{mean_p:,.0f}')
         ax.axhline(peak_avg, color='#e74c3c', linewidth=1, linestyle=':', alpha=0.5, label=f'Peak avg ₹{peak_avg:,.0f}')
         ax.axhline(offpeak_avg, color='#2ecc71', linewidth=1, linestyle=':', alpha=0.5, label=f'Off-peak avg ₹{offpeak_avg:,.0f}')
-        ax.set_title(f'{selected_dest} {selected_cat.title()} — Price Trend', color='#ffffff', fontsize=11)
+        ax.set_title(f'{selected_dest} {selected_cat.title()} - Price Trend', color='#ffffff', fontsize=11)
         ax.set_ylabel('Price per night (INR)', color='#9090b0', fontsize=9)
         ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
         plt.tight_layout()
@@ -907,12 +908,12 @@ elif st.session_state.page == 'hotels':
         peak_saving = peak_avg - offpeak_avg
         zscore = (current - mean_p) / std_p if std_p > 0 else 0
         extra = []
-        extra.append(f"<b>Peak vs off-season spread:</b> ₹{peak_saving:,.0f}/night difference — planning a {selected_dest} trip in the off-season saves approximately <b>₹{peak_saving*2:,.0f}+</b> on a 2-night stay.")
-        extra.append(f"<b>Z-score:</b> {zscore:+.2f} — current rates are {'near peak pricing, consider shifting dates to a weekday or off-season month for significant savings' if zscore > 1 else 'near the lowest range we have seen — an excellent time to book, especially for peak-season dates' if zscore < -0.5 else 'within the normal trading range'}.")
+        extra.append(f"<b>Peak vs off-season spread:</b> ₹{peak_saving:,.0f}/night difference - planning a {selected_dest} trip in the off-season saves approximately <b>₹{peak_saving*2:,.0f}+</b> on a 2-night stay.")
+        extra.append(f"<b>Z-score:</b> {zscore:+.2f} - current rates are {'near peak pricing, consider shifting dates to a weekday or off-season month for significant savings' if zscore > 1 else 'near the lowest range we have seen - an excellent time to book, especially for peak-season dates' if zscore < -0.5 else 'within the normal trading range'}.")
         dest_notes = {
             'Goa': "Goa peaks Dec–Jan (Christmas/NYE) and long weekends. Shoulder season (Feb–Mar and Oct–Nov) offers near-peak experience at 30–40% lower rates.",
             'Lonavala': "Lonavala prices peak during monsoon (Jul–Sep) for the waterfall/fog experience and long weekends. Weekday bookings in Jan–Feb offer the best value.",
-            'Mahabaleshwar': "Mahabaleshwar peaks May–Jun (summer escape) and Dec–Jan. March and September are sweet-spot months — pleasant weather, lower crowds, better rates.",
+            'Mahabaleshwar': "Mahabaleshwar peaks May–Jun (summer escape) and Dec–Jan. March and September are sweet-spot months - pleasant weather, lower crowds, better rates.",
             'Alibaug': "Alibaug is extremely weekend-dependent. Midweek stays can be 40–60% cheaper. Avoid Republic Day, Holi, and Diwali weekends for budget travel.",
         }
         if selected_dest in dest_notes:
@@ -923,7 +924,7 @@ elif st.session_state.page == 'hotels':
         c1, c2 = st.columns([1,2])
         with c1:
             st.markdown(f'''<div class="signal-card">
-                <div class="m-label">{selected_dest} — {selected_cat.title()}</div>
+                <div class="m-label">{selected_dest} - {selected_cat.title()}</div>
                 <div class="m-value">₹{current:,.0f}/night</div>
                 <br>
                 <div class="m-label">Historical Percentile</div>
@@ -945,7 +946,7 @@ elif st.session_state.page == 'medicines':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Medicines</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">NPPA regulated prices — know when to stock up before seasonal demand spikes.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">NPPA regulated prices - know when to stock up before seasonal demand spikes.</div>', unsafe_allow_html=True)
 
     med_map = {
         'Crocin 650mg': ('Crocin_650mg_15tabs', 'med_Crocin_650mg_15tabs', 'Crocin_650mg_15tabs_Is_Peak_Season'),
@@ -987,7 +988,7 @@ elif st.session_state.page == 'medicines':
     ax.fill_between(series.index, series.values, alpha=0.08, color='#2ecc71')
     ax.axhline(mean_p, color='#ffffff', linewidth=1, linestyle='--', alpha=0.4, label=f'Mean ₹{mean_p:.2f}')
     ax.axhline(peak_avg, color='#e74c3c', linewidth=1, linestyle=':', alpha=0.5, label=f'Peak avg ₹{peak_avg:.2f}')
-    ax.set_title(f'{selected} — Price Trend', color='#ffffff', fontsize=11)
+    ax.set_title(f'{selected} - Price Trend', color='#ffffff', fontsize=11)
     ax.set_ylabel('Price (INR)', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -1006,7 +1007,7 @@ elif st.session_state.page == 'medicines':
 
     peak_saving = peak_avg - offpeak_avg
     extra = []
-    extra.append(f"<b>Currently in peak season:</b> {'Yes ⚠️ — demand is elevated and prices may be at or near their seasonal high. Stock what you need now but avoid over-buying.' if is_peak_now else 'No ✅ — off-season pricing is in effect. This is the ideal window to stock up before demand rises.'}")
+    extra.append(f"<b>Currently in peak season:</b> {'Yes ⚠️ - demand is elevated and prices may be at or near their seasonal high. Stock what you need now but avoid over-buying.' if is_peak_now else 'No ✅ - off-season pricing is in effect. This is the ideal window to stock up before demand rises.'}")
     extra.append(f"<b>Peak vs off-season cost difference:</b> ₹{peak_saving:.2f} per pack. Buying 3 packs today during off-season vs peak season saves approximately <b>₹{peak_saving*3:.2f}</b>.")
 
     med_notes = {
@@ -1046,7 +1047,7 @@ elif st.session_state.page == 'realestate':
         st.session_state.page = 'home'
         st.rerun()
     st.markdown('<div class="big-title">Real Estate</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Mumbai micro-market price per sqft — macro signals and market timing analysis.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub">Mumbai micro-market price per sqft - macro signals and market timing analysis.</div>', unsafe_allow_html=True)
 
     markets = sorted(df_realestate['Micro_Market'].unique())
     selected_market = st.selectbox('Select micro market', markets)
@@ -1070,7 +1071,7 @@ elif st.session_state.page == 'realestate':
     fig, ax = dark_chart()
     ax.bar(range(len(re)), re['Price_per_sqft_INR'].values, color='#6c63ff', alpha=0.8, edgecolor='#1e1e32')
     ax.axhline(mean_p, color='#ffffff', linewidth=1, linestyle='--', alpha=0.4, label=f'Mean ₹{mean_p:,.0f}')
-    ax.set_title(f'{selected_market} — Price per sqft Over Time', color='#ffffff', fontsize=11)
+    ax.set_title(f'{selected_market} - Price per sqft Over Time', color='#ffffff', fontsize=11)
     ax.set_ylabel('Price per sqft (INR)', color='#9090b0', fontsize=9)
     ax.legend(fontsize=8, facecolor='#13131f', labelcolor='#c8c8e8')
     plt.tight_layout()
@@ -1109,9 +1110,9 @@ elif st.session_state.page == 'realestate':
     typical_flat_2bhk = current * 650
 
     extra = []
-    extra.append(f"<b>RBI Repo Rate:</b> {current_repo:.1f}% (trend: {repo_trend}). {'A falling repo rate typically stimulates demand and pushes real estate prices up over 6–12 months — buying now locks in pre-rally pricing.' if repo_trend == 'falling' else 'Rising rates increase EMI burden, which can soften demand and price growth — buyers have negotiating leverage.' if repo_trend == 'rising' else 'Stable rates mean the market is driven by local supply/demand fundamentals.'}")
+    extra.append(f"<b>RBI Repo Rate:</b> {current_repo:.1f}% (trend: {repo_trend}). {'A falling repo rate typically stimulates demand and pushes real estate prices up over 6–12 months - buying now locks in pre-rally pricing.' if repo_trend == 'falling' else 'Rising rates increase EMI burden, which can soften demand and price growth - buyers have negotiating leverage.' if repo_trend == 'rising' else 'Stable rates mean the market is driven by local supply/demand fundamentals.'}")
     extra.append(f"<b>Affordability context:</b> At ₹{current:,.0f}/sqft, a typical 450 sqft 1BHK in {selected_market} costs approximately <b>₹{typical_flat_1bhk/1e7:.2f} Cr</b>, and a 650 sqft 2BHK approximately <b>₹{typical_flat_2bhk/1e7:.2f} Cr</b>.")
-    extra.append(f"<b>Z-score vs history:</b> {zscore:+.2f} — {selected_market} is {'significantly above its historical mean — price discovery phase, higher risk for near-term buyers' if zscore > 1.2 else 'near or below its historical mean — historically, entry at this level has generated positive returns over a 3–5 year horizon' if zscore < 0 else 'within normal range — neither a clear bargain nor overpriced'}.")
+    extra.append(f"<b>Z-score vs history:</b> {zscore:+.2f} - {selected_market} is {'significantly above its historical mean - price discovery phase, higher risk for near-term buyers' if zscore > 1.2 else 'near or below its historical mean - historically, entry at this level has generated positive returns over a 3–5 year horizon' if zscore < 0 else 'within normal range - neither a clear bargain nor overpriced'}.")
     extra.append(f"<b>Market comparison:</b> {selected_market} ranks {'among the most expensive' if list(market_latest.index).index(selected_market) > len(market_latest)*0.7 else 'in the mid-range' if list(market_latest.index).index(selected_market) > len(market_latest)*0.3 else 'among the most affordable'} micro-markets in the dataset. Consider adjacent areas for better value if price is a constraint.")
 
     c1, c2 = st.columns([1,2])
