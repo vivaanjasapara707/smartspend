@@ -340,7 +340,7 @@ Write a clear helpful answer in 3-4 sentences. Start with the answer directly. I
                     max_tokens=250,
                     temperature=0.7,
                 )
-                conclusion = conclusion_response.choices[0].message.content.strip()
+                conclusion = conclusion_response.choices[0].message.content.strip().replace("—", "-").replace("–", "-")
 
                 st.markdown(f'''
                 <div style="background:#0d1f2d;border:1px solid #1a3a5c;border-radius:16px;padding:1.6rem;margin-top:1rem;">
