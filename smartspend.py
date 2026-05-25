@@ -238,7 +238,11 @@ if st.session_state.page == 'home':
         with st.spinner('Thinking...'):
             try:
                 from groq import Groq
-                groq_client = Groq(api_key="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")
+                import os
+
+                groq_client = Groq(
+                    api_key=os.environ.get("GROQ_API_KEY")
+                )
 
                 # ── pre-process all dataframes to remove datetime issues ──
                 def safe_df(df):
